@@ -1,7 +1,9 @@
-import { AuthService } from './../shared/auth.service';
-import { SignupRequestPayload } from './signup-request.payload';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { SignupRequestPayload } from './signup-request.payload';
+import { AuthService } from '../shared/auth.service';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -9,36 +11,39 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit {
-  
-  signupForm: FormGroup | any;
-  signupRequestPayload:SignupRequestPayload | any ;
-  
-  constructor(private authService:AuthService) {
-    this.signupRequestPayload ={
-      username:'',
-      email:'',
-      password:''
+
+  signupRequestPayload: SignupRequestPayload;
+  signupForm: FormGroup|any;
+
+  constructor(private authService: AuthService, private router: Router,
+    private toastr: ToastrService) {
+    this.signupRequestPayload = {
+      username: '',
+      email: '',
+      password: ''
     };
-   }
-  ngOnInit(): void {
+  }
+
+  ngOnInit() {
     this.signupForm = new FormGroup({
-      username: new FormControl('',Validators.required),
-      email: new FormControl('',[Validators.required,Validators.email]),
-      password: new FormControl('',Validators.required)
+      username: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', Validators.required),
     });
   }
 
-  signup(){
-    this.signupRequestPayload.username=this.signupForm.get('username').value;
-    this.signupRequestPayload.email=this.signupForm.get('email').value;
-    this.signupRequestPayload.password=this.signupForm.get('password').value;
+  signup() {
+    this.signupRequestPayload.email = this.signupForm.get('email').value;
+    this.signupRequestPayload.username = this.signupForm.get('username').value;
+    this.signupRequestPayload.password = this.signupForm.get('password').value;
 
     this.authService.signUp(this.signupRequestPayload)
-    .subscribe(data =>{
-     console.log(data);
-    });
-    
-    
+      .subscribe(data => {
+        this.router.navigate(['/login'],
+          { queryParams: { registered: 'true' } });
+      }, error => {
+        console.log(error);
+        this.toastr.error('Registration Failed! Please try again');
+      });
   }
-
 }

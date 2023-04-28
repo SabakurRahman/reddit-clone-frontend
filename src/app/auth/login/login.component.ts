@@ -1,8 +1,10 @@
-import { LoginRequestPayload } from './LoginRequestPayload';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { SignupRequestPayload } from '../signup/signup-request.payload';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { LoginRequestPayload } from './LoginRequestPayload';
 import { AuthService } from '../shared/auth.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -10,51 +12,48 @@ import { AuthService } from '../shared/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  
-  
-  loginForm:FormGroup|any;
-  public isError: boolean = true;
 
-  loginRequestPayload:SignupRequestPayload | any ;
-  
-  constructor(private authService:AuthService) {
-    this.loginRequestPayload ={
-      email:'',
-      password:''
+  loginForm: FormGroup|any;
+  loginRequestPayload: LoginRequestPayload;
+  registerSuccessMessage: string|any;
+  isError: boolean|any;
+
+  constructor(private authService: AuthService, private activatedRoute: ActivatedRoute,
+    private router: Router, private toastr: ToastrService) {
+    this.loginRequestPayload = {
+      username: '',
+      password: ''
     };
-   }
-
- 
-  
-  ngOnInit(): void {
-    this.loginForm= new FormGroup({
-      email: new FormControl('',[Validators.required,Validators.email]),
-      password: new FormControl('',Validators.required)
-    })
-
-    
   }
 
-  login(){
-    this.loginRequestPayload.email = this.loginForm.get('email').value;
+  ngOnInit(): void {
+    this.loginForm = new FormGroup({
+      username: new FormControl('', Validators.required),
+      password: new FormControl('', Validators.required)
+    });
+
+    this.activatedRoute.queryParams
+      .subscribe(params => {
+        if (params['registered'] !== undefined && params['registered'] === 'true') {
+          this.toastr.success('Signup Successful');
+          this.registerSuccessMessage = 'Please Check your inbox for activation email '
+            + 'activate your account before you Login!';
+        }
+      });
+  }
+
+  login() {
+    this.loginRequestPayload.username = this.loginForm.get('username').value;
     this.loginRequestPayload.password = this.loginForm.get('password').value;
 
-    this.authService.login(this.loginRequestPayload).subscribe(
-      (response) => {
-        // login success logic
-       console.log('Login successful');
-       this.isError=true;
-        
-      },
-      (error) => {
-        this.isError=false;
-      }
+    this.authService.login(this.loginRequestPayload).subscribe(data => {
+      this.isError = false;
+      this.router.navigateByUrl('/home');
+      this.toastr.success('Login Successful');
+    }, error => {
+      this.isError = true;
+      throwError(error);
+    });
+  }
 
-    );
-
-    
-
-   }
-  
 }
- 

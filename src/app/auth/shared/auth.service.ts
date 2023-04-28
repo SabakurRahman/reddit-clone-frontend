@@ -24,12 +24,36 @@ export class AuthService {
       .pipe(map(data => {
         this.localStorageService.store('authenticationToken', data.authenticationToken);
         this.localStorageService.store('username', data.username);
-        this.localStorageService.store('refreshToken', data.refreshToken);
         this.localStorageService.store('expiresAt', data.expiresAt);
+       
         return true;
       }));
   }
 
- }
+  getJwtToken() {
+    return this.localStorageService.retrieve('authenticationToken');
+  }
+
+  
+  getUserName() {
+    return this.localStorageService.retrieve('username');
+  }
+
+  getExpirationTime() {
+    const currentTime = Date.now() / 1000;
+    return this.localStorageService.retrieve('expiresAt')<currentTime;
+  }
+
+   logout() {
+    // remove token from local storage
+  }
+
+ 
+
+
+}
+
+
+ 
   
 
