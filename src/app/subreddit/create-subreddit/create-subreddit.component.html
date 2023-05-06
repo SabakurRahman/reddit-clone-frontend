@@ -1,0 +1,40 @@
+<div class="container">
+    <div class="row">
+      <div class="create-subreddit-container">
+        <form class="post-form" [formGroup]="createSubredditForm" (ngSubmit)="createsubreddit()">
+          <div class="form-group">
+            <div class="create-subreddit-heading">Create Subreddit</div>
+            <hr />
+            <input type="text" formControlName="name" class="form-control">
+    <div *ngIf="createSubredditForm.get('name').invalid && (createSubredditForm.get('name').dirty || createSubredditForm.get('name').touched)">
+      <div *ngIf="createSubredditForm.get('name').errors.required">Name is required</div>
+    </div>
+    <textarea formControlName="description" class="form-control"></textarea>
+    <div *ngIf="createSubredditForm.get('description').invalid && (createSubredditForm.get('description').dirty || createSubredditForm.get('description').touched)">
+      <div *ngIf="createSubredditForm.get('description').errors.required">Description is required</div>
+    </div>
+            <div>
+              <div style="margin-top: 5px" class="float-right">
+                <button (click)="discard()" class="btnDiscard">Discard</button>
+                <button type="submit" class="btnCreateSubreddit">Create</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-3">
+        <div class="sidebar">
+          <h5 class="guidelines">Posting to Spring Reddit</h5>
+          <hr />
+          <ul>
+            <li>Remember the human</li>
+            <hr />
+            <li>Behave like you would in real life</li>
+            <hr />
+            <li>Don't spam</li>
+            <hr />
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>

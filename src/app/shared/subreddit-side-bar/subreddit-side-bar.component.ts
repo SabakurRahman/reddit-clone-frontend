@@ -1,3 +1,5 @@
+import { SubredditModel } from 'src/app/subreddit/subreddit-response';
+import { SubredditService } from './../../subreddit/subreddit.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,11 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SubredditSideBarComponent implements OnInit {
 
-  subreddits: string[]=[];
-  displayViewAll:false|undefined;
+  subreddits?: Array<SubredditModel>
+  displayViewAll?:boolean;
+ 
+  constructor(private subredditService:SubredditService){
+   
+    this.subredditService.getAllSubredit().subscribe(data=>{
+      if (data.length > 3) {
+        this.subreddits = data.splice(0, 3);
+        this. displayViewAll = true;
+      } else {
+        this.subreddits = data;
+      }
+    });
+
+  };
+
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+   
   }
-  constructor(){};
 
 }

@@ -1,3 +1,4 @@
+import { CreatePostPayload } from './../post/create-post/create-post-payload';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth/shared/auth.service';
@@ -34,6 +35,17 @@ export class PostService {
   // post(endpoint: string, data: any) {
   //   return this.http.post(`${this.apiUrl}/${endpoint}`, data, this.httpOptions);
   // }
+
+
+  createPost(createPostPayload:CreatePostPayload){
+    return this.http.post('http://localhost:8041/api/posts/created',createPostPayload);
+
+  }
+
+  getPost(id:number){
+    return this.http.get(`http://localhost:8041/api/posts/${id}`);
+
+  }
 
 }
 

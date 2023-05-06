@@ -17,3 +17,17 @@
   .sidebar-view-subreddit {
     height: 280px;
   }
+  .sidebar>ul>li{
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    color: #1c1c1c;
+}
+a {
+  color: #0077cc;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
